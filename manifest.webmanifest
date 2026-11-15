@@ -1,0 +1,16 @@
+{
+  "name": "Traka 300",
+  "short_name": "Traka 300",
+  "description": "Plan de 72 sesiones para The Traka 300 con GPS, zonas y avisos de voz",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "lang": "es",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

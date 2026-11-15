@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b0f14">
+<title>Traka 300</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#0b0f14;--card:#151b23;--line:#263140;--tx:#e8eef5;--mu:#8a97a8;--walk:#38bdf8;--jog:#fb923c;--ok:#4ade80;--ac:#a3e635;--bad:#f87171}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px}
+body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+h1{font-size:22px;margin:0 0 2px}h2{font-size:17px;margin:0 0 8px}
+p{margin:6px 0;line-height:1.45}
+.mu{color:var(--mu)}.sm{font-size:13px}.num{font-variant-numeric:tabular-nums}
+main{padding:16px;max-width:560px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.row{display:flex;gap:10px;align-items:center}.grow{flex:1;min-width:0}
+button,.btn{font:inherit;color:var(--tx);background:#1f2937;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+button:active,.btn:active{transform:scale(.98)}
+.pri{background:var(--ac);color:#0b0f14;border-color:var(--ac);font-weight:800;font-size:19px;padding:16px;width:100%}
+.wide{width:100%}.dan{border-color:var(--bad);color:var(--bad)}
+.spo{background:#1db954;border-color:#1db954;color:#04130a;font-weight:700}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#0e141b;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;border:0;border-radius:0;background:none;padding:10px 0 12px;color:var(--mu);font-size:12px}
+nav button b{display:block;font-size:20px;font-weight:400}
+nav button.on{color:var(--ac)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mu)}
+.bar{height:8px;background:#1f2937;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:8px 0}
+details.cur{border-color:var(--ac)}
+summary{padding:12px 14px;cursor:pointer;list-style:none;display:flex;gap:8px;align-items:center}
+summary::-webkit-details-marker{display:none}
+.ses{display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.chk{width:34px;height:34px;padding:0;border-radius:50%;flex:none;font-size:16px}
+.chk.on{background:var(--ok);border-color:var(--ok);color:#0b0f14}
+.go{flex:none;padding:8px 12px;color:var(--ac)}
+label{display:block;margin:10px 0 4px;color:var(--mu);font-size:13px}
+input,select{font:inherit;width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#0e141b;color:var(--tx)}
+input[type=checkbox]{width:22px;height:22px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.st{background:rgba(0,0,0,.28);border-radius:12px;padding:10px 12px}
+.st span{display:block;color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.st b{font-size:26px;font-variant-numeric:tabular-nums}
+#wk{position:fixed;inset:0;z-index:20;background:var(--bg);display:none;flex-direction:column;padding:14px;padding-top:calc(14px + env(safe-area-inset-top));overflow:auto}
+#segName{font-size:44px;font-weight:900;letter-spacing:.02em;text-align:center;margin-top:6px}
+#segTime{font-size:84px;font-weight:800;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+#segTgt{text-align:center;font-size:15px;margin-top:6px}
+#coach{text-align:center;font-size:21px;font-weight:700;min-height:30px;margin:8px 0}
+#coach.fast{color:var(--bad)}#coach.slow{color:var(--walk)}#coach.ok{color:var(--ok)}
+#lock{position:fixed;inset:0;z-index:30;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.15);padding:30px;touch-action:none}
+#lock div{background:#000c;border:1px solid var(--line);padding:14px 18px;border-radius:14px;text-align:center}
+#modal{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.7);display:none;align-items:flex-end}
+#modal>div{background:var(--card);width:100%;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+svg.rt{width:100%;height:170px;background:#0e141b;border-radius:12px}
+#map{height:260px;border-radius:12px;overflow:hidden;background:#0e141b}
+.feel button{flex:1;padding:12px 4px;font-size:14px}
+ul{padding-left:20px;margin:6px 0}li{margin:5px 0;line-height:1.4}
+.zd{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+</style>
+</head>
+<body>
+<main id="view"></main>
+<nav>
+  <button data-t="hoy"><b>🚴</b>Hoy</button>
+  <button data-t="plan"><b>📅</b>Plan</button>
+  <button data-t="hist"><b>📈</b>Historial</button>
+  <button data-t="cfg"><b>⚙️</b>Ajustes</button>
+</nav>
+
+<section id="wk">
+  <div class="row"><div class="grow"><b id="wkTitle"></b><div class="sm mu" id="gps">GPS: buscando…</div></div>
+    <button id="bHr" style="display:none">❤ Pulso</button>
+    <button id="bLock">🔒</button></div>
+  <div id="segName">—</div>
+  <div id="segTime">0:00</div>
+  <div id="segTgt"></div>
+  <div class="sm mu" style="text-align:center" id="segNext"></div>
+  <div class="bar" style="margin:10px 0"><i id="prog" style="width:0"></i></div>
+  <div id="coach"></div>
+  <div class="grid">
+    <div class="st"><span>Tiempo</span><b id="sT">0:00</b></div>
+    <div class="st"><span>Distancia km</span><b id="sD">0,00</b></div>
+    <div class="st"><span>Velocidad km/h</span><b id="sP">--</b></div>
+    <div class="st"><span>Media km/h</span><b id="sA">--</b></div>
+    <div class="st"><span>Desnivel + (estim.)</span><b id="sG">0</b></div>
+    <div class="st"><span id="sKl">Kcal (estim.)</span><b id="sK">0</b></div>
+  </div>
+  <div id="live" style="margin:10px 0"></div>
+  <div class="row" style="margin-top:auto">
+    <button class="grow" id="bPause">⏸ Pausa</button>
+    <a class="btn spo" id="bSpo" target="_blank" rel="noopener">♫ Spotify</a>
+    <button class="dan" id="bEnd">⏹ Terminar</button>
+  </div>
+</section>
+<div id="lock"><div><b>Pantalla bloqueada</b><br><span class="sm mu">Mantén pulsado 2 segundos para desbloquear</span></div></div>
+<div id="modal"><div id="modalIn"></div></div>
+
+<script>
+//PLAN-START
+var BLOCKS=24,SPB=3,RACE_KM=300,RACE_GAIN=4150,CUT_H=20;
+// Minutos de la tirada larga y del fondo medio por bloque (índice = bloque)
+var LONG=[0,180,195,210,150,225,240,270,180,285,300,330,210,345,375,405,240,435,480,540,270,600,300,180];
+var MID=[0,90,90,100,75,105,105,120,75,120,120,135,90,135,150,150,90,150,165,180,90,150,105,75];
+var REC={4:1,8:1,12:1,16:1,20:1};
+// Sesión de intensidad: [repeticiones, minutos de trabajo, zona, minutos de recuperación]
+var Q={1:[3,8,3,4],2:[3,10,3,4],3:[2,15,3,5],5:[3,10,3,5],6:[3,12,3,5],7:[2,20,3,6],9:[4,8,4,4],10:[3,12,4,5],11:[3,15,4,5],13:[5,4,5,4],14:[6,4,5,4],15:[4,10,4,4],17:[3,20,3,5],18:[5,5,5,5],19:[2,30,3,5],21:[3,15,3,5],22:[4,6,4,4],23:[3,5,4,4]};
+var SS={5:1,6:1,7:1,21:1};
+var Z={
+ z1:{n:'SUAVE',v:'Suave',c:'#38bdf8',bg:'#082f49',hr:[0,65],pw:[0,55],rpe:'respiras por la nariz',met:4},
+ z2:{n:'FONDO',v:'Fondo',c:'#4ade80',bg:'#0b3b22',hr:[65,75],pw:[56,75],rpe:'hablas con frases enteras',met:6.5},
+ z3:{n:'TEMPO',v:'Tempo',c:'#facc15',bg:'#4a3a06',hr:[75,83],pw:[76,90],rpe:'hablas a frases cortas',met:8.5},
+ z4:{n:'UMBRAL',v:'Umbral',c:'#fb923c',bg:'#5a2408',hr:[83,90],pw:[91,105],rpe:'solo palabras sueltas',met:10.5},
+ z5:{n:'MÁXIMO',v:'Máximo',c:'#f87171',bg:'#5a0f0f',hr:[90,100],pw:[106,120],rpe:'no puedes hablar',met:13}};
+function sg(z,min,h){var o={t:'z'+z,s:Math.round(min*60)};if(h)o.h=h;return o}
+function merge(a){var o=[];a.forEach(function(s){if(s.s<=0)return;var l=o[o.length-1];if(l&&l.t===s.t&&(l.h||'')===(s.h||''))l.s+=s.s;else{var n={t:s.t,s:s.s};if(s.h)n.h=s.h;o.push(n)}});return o}
+function phase(n){return n<=8?1:n<=16?2:n<=21?3:n<=23?4:5}
+var PHASES=['','Base','Construcción','Específico','Afinado','Carrera'];
+var FZ="Otro día, sin bici: 20' de fuerza (sentadilla, peso muerto a una pierna, zancada, plancha, lumbares).";
+function quality(n){
+  var q=Q[n];
+  if(!q)return {title:'Rodaje con cadencia',segs:merge([sg(1,10),sg(2,10)].concat(rep(6,[sg(3,1,'Cadencia alta, más de 100'),sg(2,4)]),[sg(1,10)])),desc:"10' Z1 · 10' Z2 · 6 × (1' cadencia alta + 4' Z2) · 10' Z1",note:'Bloque de descarga: no añadas nada. Vale en rodillo.'};
+  var z=q[2],nm=z===5?'VO2 máx':z===4?'Umbral':SS[n]?'Sweet spot':'Tempo';
+  var hint=z===5?'En subida si puedes':SS[n]?'Parte alta de zona 3':'';
+  return {title:nm,segs:merge([sg(1,10),sg(2,5)].concat(rep(q[0],[sg(z,q[1],hint),sg(1,q[3])]),[sg(1,10-q[3])])),
+    desc:"10' Z1 · 5' Z2 · "+q[0]+" × ("+q[1]+"' Z"+z+(SS[n]?' alta':'')+" + "+q[3]+"' Z1) · 10' Z1",
+    note:(z===5?'Las series son duras de verdad: si la última sale igual que la primera, vas bien. ':'')+'Vale en rodillo.'+(n>=22?' Afinado: misma intensidad, menos volumen. No añadas series.':'')}}
+function rep(n,a){var o=[];for(var i=0;i<n;i++)o=o.concat(a);return o}
+function mid(n){
+  var M=MID[n],p=phase(n);
+  if(REC[n]||p===4)return {title:'Fondo suave',segs:merge([sg(1,10),sg(2,M-15),sg(1,5)]),desc:"10' Z1 · "+(M-15)+"' Z2 · 5' Z1",note:REC[n]?'Descarga: aquí se asimila lo de los 3 bloques anteriores.':'Afinado: piernas frescas, nada de heroicidades.'};
+  if(p===1)return {title:'Fondo + fuerza en subida',segs:merge([sg(1,10),sg(2,20)].concat(rep(4,[sg(3,6,'Fuerza: cadencia 55 a 65, sentado'),sg(2,4)]),[sg(2,M-75),sg(1,5)])),desc:"10' Z1 · 20' Z2 · 4 × (6' Z3 a 55–65 ped/min sentado + 4' Z2) · "+(M-75)+"' Z2 · 5' Z1",note:'Busca una subida o pista sostenida. '+FZ};
+  if(p===2)return {title:'Fondo + tempo final',segs:merge([sg(1,10),sg(2,M-60),sg(3,20),sg(2,5),sg(3,20),sg(1,5)]),desc:"10' Z1 · "+(M-60)+"' Z2 · 2 × 20' Z3 (5' Z2 entre medias) · 5' Z1",note:'El tempo va al final a propósito: se entrena apretar con las piernas ya cargadas. '+FZ};
+  return {title:'Fondo con fatiga previa',segs:merge([sg(1,10),sg(2,M-15),sg(1,5)]),desc:"10' Z1 · "+(M-15)+"' Z2 · 5' Z1",note:'Hazla el día ANTES de la tirada larga: salir a la larga con las piernas cargadas es lo más parecido al km 200 que puedes entrenar con 3 días.'}}
+function longRide(n){
+  var L=LONG[n],s=merge([sg(1,10),sg(2,L-10)]),d="10' Z1 · "+fmtMin(L-10)+" Z2 sin parar más de lo imprescindible";
+  if(n===21)return {title:'Simulacro Traka',segs:s,desc:d,note:'Ensayo general: sal al amanecer con las luces, la bici, las ruedas, las bolsas y la comida EXACTAS de la carrera. Si puedes, sobre tramos del recorrido. Lo que falle hoy, se cambia; después de hoy ya no se prueba nada nuevo.'};
+  return {title:'Tirada larga',segs:s,desc:d,note:(L>=240?'Come desde la primera media hora (60–90 g de hidratos/hora) y bebe 500–750 ml/hora. ':'Come y bebe desde el principio aunque no haga falta: se entrena el estómago. ')+'Mínimo 60–70 % por pista y busca ≈ 14 m de desnivel por km, como la carrera.'+(REC[n]?' Descarga: más corta a propósito.':'')+(n>=22?' Afinado: no la alargues.':'')}}
+function blockPlan(n){
+  if(n===BLOCKS)return [
+    {title:'Activación',segs:merge([sg(1,10),sg(2,20)].concat(rep(3,[sg(4,3),sg(1,3)]),[sg(1,10)])),desc:"10' Z1 · 20' Z2 · 3 × (3' Z4 + 3' Z1) · 10' Z1",note:'Lunes o martes. Revisa la bici entera después: tubeless, pastillas, cadena, luces cargadas.'},
+    {title:'Soltar piernas',segs:merge([sg(1,10)].concat(rep(4,[sg(4,1),sg(2,4)]),[sg(1,10)])),desc:"10' Z1 · 4 × (1' Z4 + 4' Z2) · 10' Z1",note:'Jueves o viernes. El viernes hay que pasar el check-in de la bici (confirma horario en la web oficial). Cena normal, hidratos, nada nuevo, a dormir pronto.'},
+    {title:'THE TRAKA 300',segs:[sg(2,CUT_H*60)],desc:RACE_KM+' km · +'+RACE_GAIN+' m · corte '+CUT_H+' h',note:'Las 3 primeras horas en Z2 aunque te pasen: lo que ahorras ahí lo cobras en el km 200. Come desde el minuto 30. Para carrera usa tu ciclocomputador; la app sirve de guion y de aviso de comida si llevas batería externa.'}];
+  return [quality(n),mid(n),longRide(n)]}
+function extraSession(n){
+  return {title:'Extra: recuperación',segs:[sg(1,45)],desc:"45' Z1 en llano o rodillo, cadencia ágil",note:'No avanza el plan. Si dudas entre hacerla o descansar, descansa'+(phase(n)>=4?': estás afinando.':'.')}}
+function sesMin(s){return Math.round(s.segs.reduce(function(a,x){return a+x.s},0)/60)}
+function fmtMin(m){return m<90?m+"'":Math.floor(m/60)+' h'+(m%60?' '+String(m%60).padStart(2,'0'):'')}
+//PLAN-END
+
+const $=s=>document.querySelector(s);
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+let cfg=Object.assign({race:'2027-05-01',kg:75,hrmax:0,ftp:0,spd:21,prevH:0,prevKm:200,fuel:20,carb:70,voice:true,vib:true,spotify:'',setup:false},LS.get('trk_cfg',{}));
+let done=LS.get('trk_done',{}),hist=LS.get('trk_hist',[]),weights=LS.get('trk_w',[]);
+let tab='hoy',HR=null;
+const DAY=864e5;
+const pd=s=>{const a=s.split('-').map(Number);return new Date(a[0],a[1]-1,a[2])};
+const today=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const dm=d=>d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+const days=(a,b)=>Math.round((b-a)/DAY);
+function curBlock(){for(let n=1;n<=BLOCKS;n++)for(let i=0;i<SPB;i++)if(!done['b'+n+'s'+i])return n;return BLOCKS}
+const mmss=s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,'0');return h?h+':'+String(m).padStart(2,'0')+':'+x:m+':'+x};
+const hm=h=>{const m=Math.round(h*60);return Math.floor(m/60)+' h '+String(m%60).padStart(2,'0')};
+const kmh=v=>(v==null||!isFinite(v))?'--':v.toFixed(1).replace('.',',');
+const avgSpd=(dist,dur)=>dist>100&&dur>0?dist/dur*3.6:null;
+const km=m=>(m/1000).toFixed(m>=100000?1:2).replace('.',',');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function spoUrl(){return /^https:\/\/open\.spotify\.com\//.test(cfg.spotify)?cfg.spotify:'https://open.spotify.com/'}
+function hav(a,b,c,d){const R=6371000,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function hrRange(t){if(!cfg.hrmax)return null;const z=Z[t];return [Math.round(cfg.hrmax*z.hr[0]/100),Math.round(cfg.hrmax*z.hr[1]/100)]}
+function tgt(t){const z=Z[t],a=[],h=hrRange(t);
+  if(h)a.push(t==='z1'?'FC < '+h[1]:t==='z5'?'FC > '+h[0]:'FC '+h[0]+'–'+h[1]);
+  if(cfg.ftp)a.push(t==='z1'?'< '+Math.round(cfg.ftp*.55)+' W':Math.round(cfg.ftp*z.pw[0]/100)+'–'+Math.round(cfg.ftp*z.pw[1]/100)+' W');
+  a.push(z.rpe);return 'Z'+t[1]+' · '+a.join(' · ')}
+function estRace(){return cfg.prevH>0&&cfg.prevKm>0?cfg.prevH*Math.pow(RACE_KM/cfg.prevKm,1.1):null}
+function routeSvg(pts){
+  if(!pts||pts.length<2)return '<div class="sm mu" style="text-align:center;padding:14px">Sin trazado GPS</div>';
+  let a=1e9,b=-1e9,c=1e9,d=-1e9;pts.forEach(p=>{a=Math.min(a,p[0]);b=Math.max(b,p[0]);c=Math.min(c,p[1]);d=Math.max(d,p[1])});
+  const k=Math.cos((a+b)/2*Math.PI/180),w=Math.max((d-c)*k,1e-5),h=Math.max(b-a,1e-5),W=300,H=170,s=Math.min((W-20)/w,(H-20)/h);
+  const X=p=>((p[1]-c)*k*s+(W-w*s)/2).toFixed(1),Y=p=>(H-((p[0]-a)*s+(H-h*s)/2)).toFixed(1);
+  const f=pts[0],l=pts[pts.length-1];
+  return '<svg class="rt" viewBox="0 0 '+W+' '+H+'"><polyline fill="none" stroke="#a3e635" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="'+pts.map(p=>X(p)+','+Y(p)).join(' ')+'"/><circle cx="'+X(f)+'" cy="'+Y(f)+'" r="5" fill="#4ade80"/><circle cx="'+X(l)+'" cy="'+Y(l)+'" r="5" fill="#f87171"/></svg>';
+}
+
+/* ---------- voz, pitidos ---------- */
+let actx=null;
+function beep(f,ms){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;g.gain.value=.25;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+ms/1000)}catch(e){}}
+function say(t){if(!cfg.voice||!('speechSynthesis' in window))return;try{const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=1.05;speechSynthesis.speak(u)}catch(e){}}
+function sayDur(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60,a=[];if(h)a.push(h+(h===1?' hora':' horas'));if(m)a.push(m+(m===1?' minuto':' minutos'));if(r&&!h)a.push(r+' segundos');return a.join(' y ')}
+function saySpd(v){return v.toFixed(1).replace('.',' coma ')+' kilómetros por hora'}
+
+/* ---------- pulsómetro Bluetooth (opcional; Chrome en Android) ---------- */
+let hrDev=null;
+async function hrConnect(){
+  if(!navigator.bluetooth)return;
+  try{const d=await navigator.bluetooth.requestDevice({filters:[{services:['heart_rate']}]});
+    const s=await d.gatt.connect(),sv=await s.getPrimaryService('heart_rate'),ch=await sv.getCharacteristic('heart_rate_measurement');
+    await ch.startNotifications();
+    ch.addEventListener('characteristicvaluechanged',e=>{const v=e.target.value,f=v.getUint8(0);HR={v:f&1?v.getUint16(1,true):v.getUint8(1),t:Date.now()}});
+    d.addEventListener('gattserverdisconnected',()=>{HR=null;hrDev=null;$('#bHr').textContent='❤ Pulso'});
+    hrDev=d;$('#bHr').textContent='❤ Conectado';
+  }catch(e){$('#bHr').textContent='❤ Pulso'}
+}
+const hrNow=()=>HR&&Date.now()-HR.t<6000?HR.v:null;
+
+/* ---------- entrenamiento en curso ---------- */
+let A=null,R=null,wake=null;
+const elapsed=()=>((A.pausedAt||Date.now())-A.startTs-A.pausedTotal)/1000;
+function begin(sess,key,wk){
+  if(A)return;
+  const segs=sess?sess.segs:[];let t=0;
+  A={key:key,wk:wk,title:sess?sess.title:'Salida libre',segs:segs,ends:segs.map(s=>t+=s.s),free:!sess,startTs:Date.now(),pausedTotal:0,pausedAt:null,dist:0,gain:0,kcal:0,pts:[],lastEl:0,segIdx:-1,kmSaid:0,fuelSaid:0,hrS:0,hrT:0,sd:segs.map(()=>0),sh:segs.map(()=>0),st:segs.map(()=>0),laps:[]};
+  say('Empezamos.');run();
+}
+function run(){
+  R={last:null,win:[],lastFix:0,alt:null,coachT:A.lastEl,coachState:'',beep:-1,save:0,lastPt:A.pts.length?A.pts[A.pts.length-1]:null,endTap:0};
+  A.total=A.free?0:A.ends[A.ends.length-1];
+  $('#wk').style.display='flex';$('#wkTitle').textContent=A.title;$('#bSpo').href=spoUrl();
+  $('#bHr').style.display=navigator.bluetooth?'':'none';
+  if(navigator.geolocation)R.watch=navigator.geolocation.watchPosition(onPos,e=>{$('#gps').textContent='GPS: '+(e.code===1?'permiso denegado':'sin señal')},{enableHighAccuracy:true,maximumAge:1000,timeout:20000});
+  else $('#gps').textContent='GPS no disponible';
+  lockWake();R.timer=setInterval(tick,500);tick();
+}
+async function lockWake(){try{if('wakeLock' in navigator)wake=await navigator.wakeLock.request('screen')}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(A&&R&&document.visibilityState==='visible')lockWake()});
+function onPos(p){
+  if(!A||!R)return;const c=p.coords,t=Date.now();
+  $('#gps').textContent='GPS: ±'+Math.round(c.accuracy)+' m'+(c.accuracy>35?' (señal débil)':'');
+  if(c.accuracy>35)return;R.lastFix=t;
+  if(A.pausedAt){R.last=null;return}
+  const la=c.latitude,lo=c.longitude;
+  if(!R.last){R.last={la,lo,t}}
+  else{const d=hav(R.last.la,R.last.lo,la,lo),dt=Math.max((t-R.last.t)/1000,1);
+    if(d>=5){if(d/dt<=25){A.dist+=d;if(A.segIdx>=0&&A.segIdx<A.sd.length)A.sd[A.segIdx]+=d;const li=Math.floor(elapsed()/1800);A.laps[li]=(A.laps[li]||0)+d}R.last={la,lo,t}}}
+  if(c.altitude!=null&&(c.altitudeAccuracy==null||c.altitudeAccuracy<=20)){
+    if(R.alt==null)R.alt=c.altitude;else if(c.altitude-R.alt>=5){A.gain+=c.altitude-R.alt;R.alt=c.altitude}else if(R.alt-c.altitude>=5)R.alt=c.altitude}
+  if(!R.lastPt||hav(R.lastPt[0],R.lastPt[1],la,lo)>=30){R.lastPt=[+la.toFixed(5),+lo.toFixed(5)];A.pts.push(R.lastPt)}
+  R.win.push({t:t,d:A.dist});while(R.win.length&&t-R.win[0].t>30000)R.win.shift();
+}
+function curSpd(){
+  const now=Date.now();if(now-R.lastFix>12000)return null;
+  const w=R.win.filter(x=>now-x.t<=15000);if(w.length<2)return null;
+  const a=w[0],b=w[w.length-1],dt=(b.t-a.t)/1000,dd=b.d-a.d;
+  if(dt<5)return null;return dd/dt*3.6;
+}
+function tick(){
+  if(!A||!R)return;
+  const el=elapsed(),dt=Math.max(0,el-A.lastEl);A.lastEl=el;
+  let i=0;
+  if(!A.free){i=A.ends.findIndex(e=>el<e);if(i<0){finish(true);return}}
+  const seg=A.free?{t:'z2'}:A.segs[i],type=seg.t,z=Z[type],v=A.pausedAt?null:curSpd(),hr=hrNow();
+  if(!A.pausedAt){
+    A.kcal+=z.met*3.5*cfg.kg/200*dt/60;
+    if(hr){A.hrS+=hr*dt;A.hrT+=dt;if(!A.free){A.sh[i]+=hr*dt;A.st[i]+=dt}}
+    if(i!==A.segIdx){A.segIdx=i;R.coachT=el;R.coachState='';
+      if(!A.free){say(z.v+', '+sayDur(Math.round(A.ends[i]-el))+'. Zona '+type[1]+'.'+(seg.h?' '+seg.h+'.':''));beep(type>'z2'?880:520,350);if(cfg.vib&&navigator.vibrate)navigator.vibrate(type>'z2'?[300,100,300]:[500])}}
+    if(!A.free){const rem=Math.ceil(A.ends[i]-el);if(rem<=3&&rem>0&&rem!==R.beep){R.beep=rem;beep(660,120)}}
+    const k=Math.floor(A.dist/10000);if(k>A.kmSaid){A.kmSaid=k;say('Kilómetro '+k*10+'. Media '+saySpd(A.dist/el*3.6)+'. Llevas '+sayDur(Math.round(el/60)*60)+'.')}
+    if(cfg.fuel>0&&(A.free||A.total>=4500)){const f=Math.floor(el/(cfg.fuel*60));if(f>A.fuelSaid){A.fuelSaid=f;say('Toca comer y beber. Unos '+Math.round(cfg.carb*cfg.fuel/60)+' gramos de hidratos y un trago largo.');beep(440,500);if(cfg.vib&&navigator.vibrate)navigator.vibrate([200,100,200,100,200])}}
+    coach(el,seg,hr,A.free?0:(i?A.ends[i-1]:0));
+    if(el-R.save>10){R.save=el;persist()}
+  }
+  const w=$('#wk');w.style.background=A.pausedAt?'':'linear-gradient('+z.bg+',#0b0f14 60%)';
+  const sn=$('#segName');sn.style.color=A.pausedAt?'':z.c;sn.textContent=A.pausedAt?'PAUSA':A.free?'LIBRE':z.n;
+  $('#segTime').textContent=mmss(A.free?el:A.ends[i]-el);
+  $('#segTgt').textContent=A.free?'':tgt(type)+(seg.h?' · '+seg.h:'');
+  const nx=A.free?null:A.segs[i+1];
+  $('#segNext').textContent=A.free?'':nx?'Luego: '+Z[nx.t].v.toLowerCase()+' '+mmss(nx.s)+' · tramo '+(i+1)+'/'+A.segs.length:'Último tramo';
+  $('#prog').style.width=A.free?'0':(el/A.total*100).toFixed(1)+'%';
+  $('#sT').textContent=mmss(el);$('#sD').textContent=km(A.dist);$('#sP').textContent=kmh(v);
+  $('#sA').textContent=kmh(avgSpd(A.dist,el));$('#sG').textContent=Math.round(A.gain);
+  $('#sKl').textContent=hr?'Pulso':'Kcal (estim.)';$('#sK').textContent=hr||Math.round(A.kcal);
+  if(Math.round(el*2)%20===0)$('#live').innerHTML=A.pts.length>1?routeSvg(A.pts):'';
+}
+function coach(el,seg,hr,segStart){
+  const c=$('#coach'),t=seg.t,r=hrRange(t);
+  if(!hr||!r){c.className='';c.textContent=Date.now()-R.lastFix>12000&&el>20?'Sin GPS: sigo marcando los tiempos':'';return}
+  if(t==='z5'||seg.s<240||el-segStart<120){c.className='';c.textContent='';return}
+  let st=hr>r[1]?'fast':hr<r[0]?'slow':'ok';
+  if(st==='slow'&&(t==='z1'||t==='z2'))st='ok';
+  const msg={fast:'Afloja, te sales de zona '+t[1],slow:'Aprieta, estás por debajo de zona '+t[1],ok:'En zona, aguanta'}[st];
+  c.className=st;c.textContent=msg+' ('+hr+')';
+  const quiet=st==='ok'&&t<'z3',need=st!==R.coachState?25:st==='ok'?300:60;
+  if(el-R.coachT>=need){R.coachT=el;R.coachState=st;if(!quiet)say(msg)}
+}
+function persist(){LS.set('trk_active',A)}
+function stopAll(){if(R){clearInterval(R.timer);if(R.watch!=null)navigator.geolocation.clearWatch(R.watch)}if(wake){try{wake.release()}catch(e){}wake=null}$('#wk').style.display='none';$('#lock').style.display='none'}
+function finish(auto){
+  const total=A.total,el=auto?total:elapsed();
+  stopAll();say(auto?'Sesión completada. Buen trabajo.':'Sesión terminada.');
+  let pts=A.pts;if(pts.length>600){const st=pts.length/600;pts=Array.from({length:600},(_,i)=>pts[Math.floor(i*st)])}
+  const nl=Math.ceil(el/1800),laps=[];for(let i=0;i<nl;i++){const s=Math.min(1800,el-i*1800);if(s>=300)laps.push({s:Math.round(s),d:Math.round(A.laps[i]||0)})}
+  const e={id:Date.now(),date:iso(new Date()),key:A.key,title:A.title,dur:Math.round(el),dist:Math.round(A.dist),gain:Math.round(A.gain),kcal:Math.round(A.kcal),hr:A.hrT>60?Math.round(A.hrS/A.hrT):0,pts:pts,feel:'',wk:A.wk,
+    splits:(A.free||A.segs.length<2)?[]:A.segs.map((s,i)=>{const st=i?A.ends[i-1]:0;return {t:s.t,s:Math.round(Math.min(A.ends[i],el)-st),d:Math.round(A.sd[i]),hr:A.st[i]>20?Math.round(A.sh[i]/A.st[i]):0}}).filter(x=>x.s>0),laps:laps};
+  const isRace=A.key==='b'+BLOCKS+'s2',full=/^b\d/.test(A.key)&&(auto||(isRace?el>=3600:el>=total*.8));
+  if(el>=60){hist.unshift(e);if(!LS.set('trk_hist',hist)){hist.forEach((h,i)=>{if(i>30)h.pts=[]});LS.set('trk_hist',hist)}}
+  if(full){done[A.key]=1;LS.set('trk_done',done)}
+  localStorage.removeItem('trk_active');A=null;R=null;render();
+  if(el>=60)summary(e,full);
+}
+const FEEL={Fácil:'Bien. No añadas volumen: la progresión ya está calculada y el objetivo es llegar fresco al bloque 21.',Bien:'Justo donde hay que estar.',Duro:'Si la anterior también fue dura, repite este bloque antes de avanzar (en Plan, desmarca sus sesiones) y revisa sueño y comida: con 3 días, la fatiga suele venir de fuera de la bici.',Dolor:'<b>Para.</b> Dolor de rodilla, tendón de Aquiles o lumbar que aparece siempre en el mismo punto no se entrena encima: 3–4 días sin intensidad y revisión de la postura (altura de sillín, calas) antes de seguir. Manos o zona del sillín dormidas en las largas también es ajuste de bici, no falta de forma.'};
+function feelHtml(){return '<p class="mu sm" style="margin-top:12px">¿Cómo ha ido?</p><div class="row feel"><button data-f="Fácil">😀 Fácil</button><button data-f="Bien">🙂 Bien</button><button data-f="Duro">😓 Duro</button><button data-f="Dolor">🤕 Dolor</button></div><div id="feelMsg" class="sm"></div>'}
+function feelBind(e){document.querySelectorAll('.feel button').forEach(b=>b.onclick=()=>{e.feel=b.dataset.f;LS.set('trk_hist',hist);$('#feelMsg').innerHTML='<p>'+FEEL[e.feel]+'</p>'})}
+function summary(e,full){
+  modal('<h2>'+esc(e.title)+(full?' ✅':'')+'</h2>'+statsHtml(e)+routeSvg(e.pts)+splitsHtml(e)+feelHtml()+'<button class="wide" style="margin-top:12px" onclick="closeModal()">Cerrar</button>');
+  feelBind(e);
+}
+function splitsHtml(e){
+  let h='';const sp=x=>x.d>=50?x.d/x.s*3.6:null,L=e.laps||[];
+  if(L.length>=6){const k=Math.floor(L.length/3),avg=a=>a.reduce((s,x)=>s+x.d,0)/a.reduce((s,x)=>s+x.s,0)*3.6,f=avg(L.slice(0,k)),l=avg(L.slice(-k)),dif=f>0?(l/f-1)*100:0;
+    h+='<p class="sm">Primer tercio <b class="num">'+kmh(f)+'</b> · último tercio <b class="num">'+kmh(l)+'</b> km/h. '+(dif<-15?'<b style="color:var(--bad)">Caes un '+Math.round(-dif)+' % al final.</b> Si el terreno era parecido, saliste fuerte o comiste poco: es el fallo que en la Traka se paga a partir del km 200.':'<b style="color:var(--ok)">Velocidad sostenida.</b>')+'</p>'}
+  if(e.splits&&e.splits.length)h+='<details><summary><b class="grow">Ver tramos ('+e.splits.length+')</b>▾</summary><div style="padding:0 14px 10px" class="sm num">'+e.splits.map(x=>{const r=hrRange(x.t),c=!x.hr||!r?'inherit':x.hr>r[1]?'var(--bad)':x.hr<r[0]?'var(--walk)':'var(--ok)';
+    return '<div class="row" style="padding:5px 0;border-top:1px solid var(--line)"><span class="grow" style="color:'+Z[x.t].c+'">Z'+x.t[1]+' '+Z[x.t].v+'</span><span>'+mmss(x.s)+'</span><span style="width:58px;text-align:right">'+km(x.d)+'</span><span style="width:46px;text-align:right">'+kmh(sp(x))+'</span><b style="width:40px;text-align:right;color:'+c+'">'+(x.hr||'')+'</b></div>'}).join('')+
+    '<p class="mu">Columnas: tiempo · km · km/h · pulso medio (si hay pulsómetro: verde = en zona, rojo = por encima, azul = por debajo). La velocidad no mide el esfuerzo en gravel: depende de la pendiente y el firme.</p></div></details>';
+  if(L.length>=2)h+='<details><summary><b class="grow">Cada 30 minutos ('+L.length+')</b>▾</summary><div style="padding:0 14px 10px" class="sm num">'+L.map((x,i)=>'<div class="row" style="padding:5px 0;border-top:1px solid var(--line)"><span class="grow">'+mmss(i*1800)+'</span><span style="width:70px;text-align:right">'+km(x.d)+' km</span><b style="width:70px;text-align:right">'+kmh(sp(x))+' km/h</b></div>').join('')+'</div></details>';
+  return h}
+function statsHtml(e){return '<div class="grid" style="margin:10px 0"><div class="st"><span>Tiempo</span><b>'+mmss(e.dur)+'</b></div><div class="st"><span>Distancia km</span><b>'+km(e.dist)+'</b></div><div class="st"><span>Media km/h</span><b>'+kmh(avgSpd(e.dist,e.dur))+'</b></div><div class="st"><span>Desnivel +'+(e.manual?'':' (estim.)')+'</span><b>'+(e.gain||0)+'</b></div>'+(e.manual?'':'<div class="st"><span>Kcal (estim.)</span><b>'+e.kcal+'</b></div>')+(e.hr?'<div class="st"><span>Pulso medio</span><b>'+e.hr+'</b></div>':'')+'</div>'}
+
+$('#bPause').onclick=()=>{if(!A)return;if(A.pausedAt){A.pausedTotal+=Date.now()-A.pausedAt;A.pausedAt=null;R.last=null;R.win=[];$('#bPause').textContent='⏸ Pausa';say('Seguimos')}else{A.pausedAt=Date.now();$('#bPause').textContent='▶ Seguir';say('Pausa')}persist();tick()};
+$('#bEnd').onclick=()=>{if(!A)return;const n=Date.now();if(n-R.endTap<3000){$('#bEnd').textContent='⏹ Terminar';finish(false)}else{R.endTap=n;$('#bEnd').textContent='¿Seguro? Pulsa otra vez';setTimeout(()=>{$('#bEnd').textContent='⏹ Terminar'},3000)}};
+$('#bLock').onclick=()=>{$('#lock').style.display='flex'};
+$('#bHr').onclick=()=>{if(!hrDev)hrConnect()};
+(function(){let t=null;const l=$('#lock');const dn=e=>{e.preventDefault();t=setTimeout(()=>{l.style.display='none'},2000)},up=()=>clearTimeout(t);
+  l.addEventListener('touchstart',dn,{passive:false});l.addEventListener('touchend',up);l.addEventListener('mousedown',dn);l.addEventListener('mouseup',up)})();
+
+/* ---------- modal ---------- */
+function modal(h){$('#modalIn').innerHTML=h;$('#modal').style.display='flex'}
+function closeModal(){$('#modal').style.display='none';$('#modalIn').innerHTML=''}
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+
+/* ---------- registrar a mano (salida hecha con el ciclocomputador) ---------- */
+function manual(n,i,after){
+  const s=blockPlan(n)[i],k='b'+n+'s'+i;
+  modal('<h2>'+esc(s.title)+' · bloque '+n+'</h2><p class="sm mu">Si la has grabado con tu ciclocomputador o Strava, apunta aquí los datos (opcionales) para que cuenten en el historial.</p>'+
+   '<div class="grid"><div><label>Horas</label><input type="number" inputmode="numeric" id="mH" min="0" placeholder="'+Math.floor(sesMin(s)/60)+'"></div><div><label>Minutos</label><input type="number" inputmode="numeric" id="mM" min="0" max="59" placeholder="'+sesMin(s)%60+'"></div><div><label>Km</label><input type="number" inputmode="decimal" id="mK" step="0.1"></div><div><label>Desnivel + (m)</label><input type="number" inputmode="numeric" id="mG"></div></div>'+
+   '<button class="pri" style="margin-top:14px" id="mOk">MARCAR HECHA</button><button class="wide" style="margin-top:8px" onclick="closeModal()">Cancelar</button>');
+  $('#mOk').onclick=()=>{const dur=((+$('#mH').value||0)*60+(+$('#mM').value||0))*60,dist=Math.round((+$('#mK').value||0)*1000),gain=Math.round(+$('#mG').value||0);
+    done[k]=1;LS.set('trk_done',done);
+    if(dur>0||dist>0){hist.unshift({id:Date.now(),date:iso(new Date()),key:k,title:s.title,dur:dur||sesMin(s)*60,dist:dist,gain:gain,kcal:0,hr:0,pts:[],feel:'',wk:n,splits:[],laps:[],manual:true});LS.set('trk_hist',hist)}
+    closeModal();after()};
+}
+
+/* ---------- vistas ---------- */
+function nextSession(n){const w=blockPlan(n);for(let i=0;i<SPB;i++)if(!done['b'+n+'s'+i])return {i:i,s:w[i]};return null}
+function sesLine(s){const m=sesMin(s);return fmtMin(m)+' · ≈ '+Math.round(m/60*cfg.spd)+' km a '+String(cfg.spd).replace('.',',')+' km/h'}
+function zoneBar(s){const tot=s.segs.reduce((a,x)=>a+x.s,0);return '<div class="bar" style="display:flex;height:10px;margin:8px 0">'+s.segs.map(x=>'<i style="width:'+(x.s/tot*100).toFixed(2)+'%;background:'+Z[x.t].c+'"></i>').join('')+'</div>'}
+function vHoy(){
+  const n=curBlock(),nx=nextSession(n),dc=Object.keys(done).length,tot=BLOCKS*SPB,rem=Math.max(0,tot-dc),dr=Math.max(0,days(today(),pd(cfg.race)));
+  const dn=[0,1,2].filter(i=>done['b'+n+'s'+i]).length;
+  let h='<h1>Bloque '+n+' de '+BLOCKS+'</h1><div class="mu sm">Fase '+phase(n)+': '+PHASES[phase(n)]+(REC[n]?' (descarga)':'')+' · sesión '+Math.min(dc+1,tot)+' de '+tot+' · faltan '+dr+' días para The Traka 300</div>';
+  if(!cfg.setup)h+='<div class="card sm" style="border-color:var(--ac)"><b>Antes de empezar:</b> en Ajustes pon tu peso, tu FC máxima o FTP (para ver los rangos de cada zona) y tu tiempo en la Traka anterior. <button class="wide" style="margin-top:8px" id="bSet">Ir a Ajustes</button></div>';
+  if(A)h+='<div class="card" style="border-color:var(--jog)"><b>Tienes una sesión a medias</b> ('+esc(A.title)+', '+mmss(A.lastEl)+')<div class="row" style="margin-top:10px"><button class="grow" id="bRes">Reanudar</button><button class="dan" id="bDis">Descartar</button></div></div>';
+  const in7=e=>days(pd(e.date),today())<7,w7=hist.filter(e=>/^b\d/.test(e.key)&&in7(e)).length,x7=hist.filter(e=>e.key==='extra'&&in7(e)).length,ex=extraSession(n),ll=hist.find(e=>/s2$/.test(e.key));
+  if(w7>=4)h+='<div class="card sm" style="border-color:var(--bad)"><b>Llevas '+w7+' sesiones del plan en 7 días.</b> El plan está calculado para 3: cuentan, pero mete un día de descanso antes de la siguiente.</div>';
+  if(nx&&nx.i===2&&ll&&days(pd(ll.date),today())<5)h+='<div class="card sm" style="border-color:var(--bad)"><b>Tu última tirada larga fue hace menos de 5 días.</b> Espera antes de hacer esta.</div>';
+  h+='<div class="card"><div class="row"><span class="tag">Este bloque: '+dn+'/'+SPB+'</span><span class="tag">Plan: '+Math.round(dc/tot*100)+'%</span></div><div class="bar" style="margin:10px 0"><i style="width:'+(dc/tot*100).toFixed(1)+'%"></i></div>';
+  if(nx){const zs=[...new Set(nx.s.segs.map(x=>x.t))].sort();
+    h+='<h2 style="margin-top:12px">'+esc(nx.s.title)+'</h2><p>'+nx.s.desc+'</p>'+zoneBar(nx.s)+'<p class="mu sm">'+sesLine(nx.s)+(nx.s.note?'<br>'+nx.s.note:'')+'</p><div class="sm">'+zs.map(t=>'<div><span class="zd" style="background:'+Z[t].c+'"></span>'+tgt(t)+'</div>').join('')+'</div>'+
+    (sesMin(nx.s)>=180?'<p class="sm mu" style="margin-top:8px">Salida de más de 3 h: la pantalla encendida gasta mucha batería. Lleva batería externa, o grábala con tu ciclocomputador y márcala luego en Plan (○).</p>':'')+
+    '<button class="pri" id="bGo" style="margin-top:10px">EMPEZAR</button><button class="wide" id="bMan" style="margin-top:8px">Ya la he hecho (apuntar a mano)</button>'}
+  else h+='<p><b>Plan completado.</b></p>';
+  h+='</div><div class="card"><div class="row"><h2 class="grow" style="margin:0">Sesión extra (opcional)</h2><span class="tag">Últimos 7 días: '+x7+'/1</span></div><p>'+ex.desc+'</p><p class="mu sm">'+ex.note+'</p>'+(x7>=1||w7+x7>=5?'<p class="sm" style="color:var(--bad)"><b>'+(w7+x7>=5?'Llevas '+(w7+x7)+' sesiones en 7 días: hoy toca descanso.':'Ya llevas una extra en 7 días: la segunda no ayuda, carga.')+'</b></p>':'')+'<button class="wide" id="bExtra">Hacer sesión extra</button></div><div class="row"><button class="grow" id="bFree">Salida libre</button><a class="btn spo grow" target="_blank" rel="noopener" href="'+esc(spoUrl())+'">♫ Abrir Spotify</a></div>';
+  if(rem&&dr){const need=rem/(dr/7),end=new Date(today().getTime()+Math.ceil(rem/SPB*7)*DAY),late=need>3.3;
+    h+='<div class="card sm '+(late?'':'mu')+'"'+(late?' style="border-color:var(--bad)"':'')+'>Quedan <b>'+rem+' sesiones</b>. Para llegar a la carrera necesitas <b>'+need.toFixed(1).replace('.',',')+' por semana</b>; a 3 por semana terminarías el '+dm(end)+'.'+
+    (late?' <b>Vas justo.</b> No lo arregles con 5 salidas por semana: sáltate la sesión de intensidad del bloque (márcala en Plan), nunca la tirada larga.':'')+
+    (n>=22&&dr>rem/SPB*7+10?' <b>Vas adelantado:</b> repite los bloques 19 y 21 (desmárcalos en Plan) hasta que falten 3 semanas, para que la salida más larga no quede lejos de la carrera.':'')+'</div>'}
+  const er=estRace();
+  if(er)h+='<div class="card sm"'+(er>18.5?' style="border-color:var(--bad)"':'')+'><b>Estimación Traka 300: ≈ '+hm(er)+'</b> (rango '+hm(er*.9)+' – '+hm(er*1.1)+'), extrapolando tus '+hm(cfg.prevH)+' en '+cfg.prevKm+' km. Corte: '+CUT_H+' h. Es una regla aproximada: no tiene en cuenta el desnivel ni lo que entrenes de aquí a mayo.'+(er>18.5?' <b>Margen escaso con el corte:</b> prioridad absoluta a las tiradas largas y a que las paradas no sumen más de 45–60 min.':'')+'</div>';
+  $('#view').innerHTML=h;
+  if(nx){$('#bGo').onclick=()=>begin(nx.s,'b'+n+'s'+nx.i,n);$('#bMan').onclick=()=>manual(n,nx.i,render)}
+  if(!cfg.setup)$('#bSet').onclick=()=>{tab='cfg';render()};
+  $('#bFree').onclick=()=>begin(null,'libre',n);
+  $('#bExtra').onclick=()=>begin(ex,'extra',n);
+  if(A){$('#bRes').onclick=()=>{$('#bPause').textContent=A.pausedAt?'▶ Seguir':'⏸ Pausa';run()};$('#bDis').onclick=()=>{localStorage.removeItem('trk_active');A=null;render()}}
+}
+function vPlan(){
+  const cur=curBlock();
+  let h='<h1>Plan: '+BLOCKS+' bloques · '+BLOCKS*SPB+' sesiones</h1><div class="mu sm">Avanzas sesión a sesión: cada sesión hecha cuenta, sea el día que sea. Toca ○ para apuntar una hecha con tu ciclocomputador (o desmarcarla para repetirla), ▶ para hacerla con la app.</div>'+
+  '<details><summary><b class="grow">Reglas del plan (léelas una vez)</b>▾</summary><div style="padding:0 14px 12px" class="sm"><ul>'+
+  '<li><b>Zonas.</b> Z1 suave · Z2 fondo (hablas con frases enteras) · Z3 tempo (frases cortas) · Z4 umbral (palabras sueltas) · Z5 máximo. Con FC máxima o FTP en Ajustes ves los rangos en pulsaciones y vatios.</li>'+
+  '<li><b>Cada bloque = 3 salidas:</b> intensidad (1 h–1 h 30, vale en rodillo), fondo medio (1 h 30–3 h) y tirada larga. Reparto tipo: martes, jueves y sábado o domingo. Al menos un día libre entre la intensidad y la larga.</li>'+
+  '<li><b>La tirada larga no se negocia.</b> Con 3 días por semana, el 60–70 % de tu preparación está ahí. Si una semana solo puedes salir un día, que sea ese.</li>'+
+  '<li><b>Desde el bloque 17</b> haz el fondo medio el día antes de la larga: es la única forma de entrenar fatiga acumulada con 3 días.</li>'+
+  '<li><b>Bloques 4, 8, 12, 16 y 20 son de descarga.</b> No los rellenes: ahí es donde mejoras.</li>'+
+  '<li><b>Comida:</b> 60–90 g de hidratos por hora y 500–750 ml de líquido por hora en todo lo que pase de 2 h. El estómago se entrena igual que las piernas; quien no lo entrena, no termina.</li>'+
+  '<li><b>Material:</b> todo probado antes del simulacro (bloque 21): cubiertas y presiones, bolsas, luces delantera blanca y trasera roja, kit de reparación tubeless, ropa de noche. Después del simulacro no se estrena nada.</li>'+
+  '<li><b>Fuerza:</b> 1–2 días a la semana, 20 min en casa, sobre todo en Base y Construcción. Lumbares, cuello y manos fallan antes que las piernas a partir de 10 h.</li>'+
+  '<li><b>Carrera:</b> '+RACE_KM+' km, +'+RACE_GAIN+' m, 80 % pista, corte '+CUT_H+' h (datos de la web oficial, pendientes de confirmar). A 18 km/h en movimiento + 60 min de paradas salen 17 h 40. A 16 km/h + 60 min, 19 h 45: sin margen.</li>'+
+  '<li><b>Bloque duro = se repite</b> (desmarca sus sesiones). Dolor localizado que vuelve siempre al mismo punto = parar y revisar postura.</li></ul></div></details>';
+  let ph=0;
+  for(let n=1;n<=BLOCKS;n++){
+    if(phase(n)!==ph){ph=phase(n);h+='<h2 style="margin:18px 0 4px">Fase '+ph+' · '+PHASES[ph]+'</h2>'}
+    const w=blockPlan(n),dn=[0,1,2].filter(i=>done['b'+n+'s'+i]).length,tm=w.reduce((a,s)=>a+sesMin(s),0);
+    h+='<details'+(n===cur?' open class="cur"':'')+'><summary><b>Bloque '+n+'</b><span class="grow mu sm">'+(n===BLOCKS?'Semana de carrera':esc(w[0].title)+' · larga '+fmtMin(sesMin(w[2]))+' · total '+fmtMin(tm)+(REC[n]?' · descarga':''))+'</span><span class="tag">'+dn+'/'+SPB+'</span></summary>';
+    w.forEach((s,i)=>{const k='b'+n+'s'+i;h+='<div class="ses"><button class="chk'+(done[k]?' on':'')+'" data-n="'+n+'" data-i="'+i+'">'+(done[k]?'✓':'○')+'</button><div class="grow"><b>'+esc(s.title)+'</b><div class="sm mu">'+s.desc+'<br>'+sesLine(s)+'</div></div><button class="go" data-n="'+n+'" data-i="'+i+'">▶</button></div>'});
+    h+='</details>';
+  }
+  $('#view').innerHTML=h;
+  document.querySelectorAll('.chk').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,i=+b.dataset.i,k='b'+n+'s'+i;
+    if(done[k]){delete done[k];LS.set('trk_done',done);b.classList.remove('on');b.textContent='○'}
+    else manual(n,i,()=>{const y=window.scrollY;render();window.scrollTo(0,y)})});
+  document.querySelectorAll('.go').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,i=+b.dataset.i;begin(blockPlan(n)[i],'b'+n+'s'+i,n)});
+  const c=document.querySelector('details.cur');if(c)c.scrollIntoView({block:'center'});
+}
+function vHist(){
+  const tk=hist.reduce((a,e)=>a+e.dist,0),tt=hist.reduce((a,e)=>a+e.dur,0),tg=hist.reduce((a,e)=>a+(e.gain||0),0);
+  let h='<h1>Historial</h1><div class="grid" style="margin:12px 0"><div class="st"><span>Sesiones</span><b>'+hist.length+'</b></div><div class="st"><span>Km totales</span><b>'+Math.round(tk/1000)+'</b></div><div class="st"><span>Horas</span><b>'+(tt/3600).toFixed(1).replace('.',',')+'</b></div><div class="st"><span>Desnivel + (m)</span><b>'+tg+'</b></div></div>';
+  if(!hist.length)h+='<p class="mu">Todavía no hay sesiones.</p>';
+  hist.forEach(e=>{h+='<div class="card row" data-id="'+e.id+'" style="cursor:pointer"><div class="grow"><b>'+esc(e.title)+'</b> <span class="mu sm">'+dm(pd(e.date))+(e.manual?' · a mano':'')+(e.feel?' · '+e.feel:'')+'</span><div class="sm mu num">'+mmss(e.dur)+(e.dist?' · '+km(e.dist)+' km · '+kmh(avgSpd(e.dist,e.dur))+' km/h':'')+(e.gain?' · +'+e.gain+' m':'')+'</div></div>›</div>'});
+  $('#view').innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(c=>c.onclick=()=>detail(hist.find(e=>e.id==c.dataset.id)));
+}
+function detail(e){
+  modal('<h2>'+esc(e.title)+' · '+dm(pd(e.date))+'</h2>'+statsHtml(e)+(e.manual?'':'<div id="map">'+routeSvg(e.pts)+'</div>')+splitsHtml(e)+(e.feel?'':feelHtml())+'<div class="row" style="margin-top:12px"><button class="grow" onclick="closeModal()">Cerrar</button><button class="dan" id="bDel">Borrar</button></div>');
+  if(!e.feel)feelBind(e);
+  let tap=0;$('#bDel').onclick=()=>{if(Date.now()-tap<3000){hist=hist.filter(x=>x.id!==e.id);LS.set('trk_hist',hist);closeModal();render()}else{tap=Date.now();$('#bDel').textContent='¿Seguro?'}};
+  if(!e.manual&&navigator.onLine&&e.pts.length>1)leaflet().then(()=>{const el=$('#map');if(!el)return;el.innerHTML='';const m=L.map(el,{attributionControl:true});L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m);const p=L.polyline(e.pts,{color:'#65a30d',weight:5}).addTo(m);m.fitBounds(p.getBounds(),{padding:[16,16]})}).catch(()=>{});
+}
+let lfP=null;
+function leaflet(){if(window.L)return Promise.resolve();if(lfP)return lfP;lfP=new Promise((ok,ko)=>{const c=document.createElement('link');c.rel='stylesheet';c.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(c);const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=ok;s.onerror=()=>{lfP=null;ko()};document.head.appendChild(s)});return lfP}
+function vCfg(){
+  let wl='';if(weights.length){const f=weights[0],l=weights[weights.length-1],d=l.kg-f.kg;wl='<p class="sm">Inicio '+f.kg+' kg ('+dm(pd(f.d))+') → ahora <b>'+l.kg+' kg</b> ('+(d>0?'+':'')+d.toFixed(1).replace('.',',')+' kg)</p>'}
+  const er=estRace(),zr=cfg.hrmax||cfg.ftp?'<div class="sm" style="margin-top:10px">'+Object.keys(Z).map(t=>'<div><span class="zd" style="background:'+Z[t].c+'"></span>'+tgt(t)+'</div>').join('')+'</div>':'';
+  $('#view').innerHTML='<h1>Ajustes</h1>'+
+  '<div class="card"><h2>Carrera</h2><label>Fecha de The Traka 300</label><input type="date" id="cRace" value="'+cfg.race+'"><div class="grid"><div><label>Tu tiempo en la Traka anterior (horas)</label><input type="number" step="0.25" inputmode="decimal" id="cPH" value="'+(cfg.prevH||'')+'" placeholder="p. ej. 10,5"></div><div><label>Distancia de esa carrera (km)</label><input type="number" inputmode="numeric" id="cPK" value="'+cfg.prevKm+'"></div></div>'+(er?'<p class="sm">Estimación para los 300 km: <b>≈ '+hm(er)+'</b> (±10 %). Corte: '+CUT_H+' h.</p>':'<p class="sm mu">Con tu tiempo anterior la app estima cuánto tardarías en los 300 km y si vas justo con el corte de '+CUT_H+' h.</p>')+'</div>'+
+  '<div class="card"><h2>Tú</h2><label>Peso (kg) — se usa para las calorías</label><div class="row"><input type="number" step="0.1" inputmode="decimal" id="cKg" value="'+cfg.kg+'"><button id="bKg">Registrar</button></div>'+wl+
+   '<div class="grid"><div><label>FC máxima (ppm), opcional</label><input type="number" inputmode="numeric" id="cHr" value="'+(cfg.hrmax||'')+'"></div><div><label>FTP (vatios), opcional</label><input type="number" inputmode="numeric" id="cFtp" value="'+(cfg.ftp||'')+'"></div></div>'+zr+
+   '<label>Tu velocidad media habitual en gravel (km/h) — solo para estimar los km de cada sesión</label><input type="number" step="0.5" inputmode="decimal" id="cSpd" value="'+cfg.spd+'"></div>'+
+  '<div class="card"><h2>Avisos</h2><div class="grid"><div><label>Aviso de comer cada (min; 0 = no)</label><input type="number" inputmode="numeric" id="cFuel" value="'+cfg.fuel+'"></div><div><label>Hidratos objetivo (g/hora)</label><input type="number" inputmode="numeric" id="cCarb" value="'+cfg.carb+'"></div></div><p class="sm mu">El aviso de comida suena en las salidas de más de 75 min.</p><div class="row" style="margin-top:12px"><input type="checkbox" id="cVoice"'+(cfg.voice?' checked':'')+'><span class="grow">Avisos de voz</span><button id="bTest">Probar voz</button></div><div class="row" style="margin-top:12px"><input type="checkbox" id="cVib"'+(cfg.vib?' checked':'')+'><span class="grow">Vibración en cada cambio</span></div>'+
+   '<p class="sm mu">'+(navigator.bluetooth?'Pulsómetro Bluetooth: se conecta con el botón ❤ dentro de la sesión. Con él, la app avisa de «afloja / aprieta» según tu zona.':'Este navegador no permite conectar un pulsómetro (iPhone no lo permite; Chrome en Android sí). Sin él, la app marca los tiempos y las zonas, y el control del esfuerzo lo haces tú con tu ciclocomputador.')+'</p></div>'+
+  '<div class="card"><h2>Spotify</h2><label>Enlace de tu playlist (Spotify → Compartir → Copiar enlace)</label><input type="url" id="cSpo" placeholder="https://open.spotify.com/playlist/…" value="'+esc(cfg.spotify)+'"><p class="sm mu">Pensado para el rodillo. En vías abiertas al tráfico no lleves auriculares.</p></div>'+
+  '<div class="card"><h2>Copia de seguridad</h2><p class="sm mu">Los datos solo están en este móvil. Exporta de vez en cuando.</p><div class="row"><button class="grow" id="bExp">Exportar</button><button class="grow" id="bImp">Importar</button></div><input type="file" id="fImp" accept="application/json" style="display:none"></div>'+
+  '<p class="sm mu" style="text-align:center">v1.0 · Mantén la pantalla encendida durante la sesión: con la pantalla apagada el navegador corta el GPS.</p>';
+  const sv=()=>{cfg.setup=true;LS.set('trk_cfg',cfg)},num=(id,lo,hi,d)=>{const v=+String($(id).value).replace(',','.');return v>=lo&&v<=hi?v:d};
+  $('#cRace').onchange=e=>{if(e.target.value){cfg.race=e.target.value;sv()}};
+  $('#cPH').onchange=()=>{cfg.prevH=num('#cPH',1,60,0);sv();render()};
+  $('#cPK').onchange=()=>{cfg.prevKm=num('#cPK',20,1000,200);sv();render()};
+  $('#cHr').onchange=()=>{cfg.hrmax=num('#cHr',120,230,0);sv();render()};
+  $('#cFtp').onchange=()=>{cfg.ftp=num('#cFtp',80,500,0);sv();render()};
+  $('#cSpd').onchange=()=>{cfg.spd=num('#cSpd',8,40,21);sv()};
+  $('#cFuel').onchange=()=>{cfg.fuel=num('#cFuel',0,120,20);sv()};
+  $('#cCarb').onchange=()=>{cfg.carb=num('#cCarb',20,140,70);sv()};
+  $('#cVoice').onchange=e=>{cfg.voice=e.target.checked;sv()};$('#cVib').onchange=e=>{cfg.vib=e.target.checked;sv()};
+  $('#cSpo').onchange=e=>{cfg.spotify=e.target.value.trim();sv()};
+  $('#bTest').onclick=()=>{beep(880,300);say('Umbral, 8 minutos. Zona 4. Toca comer y beber.')};
+  $('#bKg').onclick=()=>{const k=num('#cKg',30,250,0);if(k){cfg.kg=k;sv();const d=iso(today());weights=weights.filter(w=>w.d!==d);weights.push({d:d,kg:k});LS.set('trk_w',weights);render()}};
+  $('#bExp').onclick=()=>{const b=new Blob([JSON.stringify({cfg,done,hist,weights})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='traka300-copia-'+iso(today())+'.json';a.click()};
+  $('#bImp').onclick=()=>$('#fImp').click();
+  $('#fImp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const d=JSON.parse(t);if(d.cfg){cfg=Object.assign(cfg,d.cfg);done=d.done||{};hist=d.hist||[];weights=d.weights||[];LS.set('trk_cfg',cfg);LS.set('trk_done',done);LS.set('trk_hist',hist);LS.set('trk_w',weights);render()}}).catch(()=>{})};
+}
+function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));({hoy:vHoy,plan:vPlan,hist:vHist,cfg:vCfg})[tab]();if(tab!=='plan')window.scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+
+/* ---------- arranque ---------- */
+(function(){const a=LS.get('trk_active',null);if(a&&a.startTs&&Date.now()-a.startTs<26*3600e3)A=a;else localStorage.removeItem('trk_active')})();
+render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
